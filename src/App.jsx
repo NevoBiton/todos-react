@@ -31,6 +31,13 @@ function App() {
     return result; 
     }
 
+    function calculateProgress() {
+      if (todosList.length === 0) return 0;
+      const completedTodos = todosList.filter(todo => todo.isComplete).length;
+      return (completedTodos / todosList.length) * 100;
+    };
+    
+
   function addTodo(ev) {
       ev.preventDefault();
       const newTodo = {
@@ -50,6 +57,24 @@ function App() {
       })
       setTodosList(newTodoList)
 
+    }
+
+    function totalCompletedTodos() {
+      const res = todosList.filter((todo) => {
+        if (todo.isComplete) {
+          return todo
+        }
+      })
+      return res.length
+    }
+
+    function totalActiveTodos() {
+      const res = todosList.filter((todo) => {
+        if (!todo.isComplete) {
+          return todo
+        }
+      })
+      return res.length
     }
     
 
@@ -75,6 +100,10 @@ function App() {
       </div>
       <button className="todo_button">Add Todo</button>
     </form>
+    <p>todos progress : {calculateProgress().toFixed(2)}%</p>
+    <div className="progress_container">
+      <div className="progress_bar" style={{ width: `${calculateProgress()}%` }}></div>
+    </div>
     {todosList.length === 0 ? <p className="todo_message">No todos available</p> : null}
     <ul className="todo_list">
       {todosList.map((todo) => {
@@ -93,6 +122,11 @@ function App() {
         )
       })}
     </ul>
+      <div className="todos_information_wrapper">
+        <p>Total todos : {todosList.length}</p>
+        <p>Completed todos : {totalCompletedTodos()}</p>
+        <p>Active todos : {totalActiveTodos()}</p>
+      </div>
   </div>
 </>
 
