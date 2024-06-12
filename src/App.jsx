@@ -1,136 +1,173 @@
-import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState, useRef } from "react";
+import TodoList from "./components/TodoList";
+import TodosStatistic from "./components/TodoStatistics";
+import AddTodoForm from "./components/TodoForm";
+import ProgressBar from "./components/TodoProgressBar";
+import TodoFilter from "./components/TodoFilter";
 
-const INITIAL_TODOS = [
-  { id: '1', title: 'Learn React', isComplete: false },
-  { id: '2', title: 'Build a Todo App', isComplete: false },
-  { id: '3', title: 'Read JavaScript Documentation', isComplete: true },
-  { id: '4', title: 'Write Unit Tests', isComplete: false },
-  { id: '5', title: 'Implement Context', isComplete: true } ,
-  { id: '6', title: 'Create Portfolio Website', isComplete: false },
-  { id: '7', title: 'Learn TypeScript', isComplete: false },
-  { id: '8', title: 'Refactor Codebase', isComplete: true },
-  { id: '9', title: 'Optimize Performance', isComplete: false },
-  { id: '10', title: 'Deploy to Production', isComplete: true }
-]
+import "./App.css";
+import axios from "axios";
 
+const TodosURL = "http://localhost:8001/todos";
 
 function App() {
+  const [todosList, setTodosList] = useState([]);
+  const [query, setQuery] = useState("");
 
-  const [todosList, setTodosList] = useState(INITIAL_TODOS);
-  const [newTodoName, setNewTodoName] = useState("");
+  const todoInputTitleRef = useRef(null);
 
-  function makeId(length) { 
-    let result = ''; const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; 
+  useEffect(() => {
+    todoInputTitleRef.current.focus();
+    console.log("Hello !");
+    axios
+      .get(`${TodosURL}`)
+      .then(function (response) {
+        console.log(response.data);
+        setTodosList(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  function makeId(length) {
+    let result = "";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const charactersLength = characters.length;
-     for (let i = 0; i < length; i++) { 
-    result += characters.charAt(Math.floor(Math.random() * charactersLength)); 
-    } 
-    return result; 
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
+    return result;
+  }
 
-    function calculateProgress() {
-      if (todosList.length === 0) return 0;
-      const completedTodos = todosList.filter(todo => todo.isComplete).length;
-      return (completedTodos / todosList.length) * 100;
+  function calculateProgress() {
+    if (todosList.length === 0) return 0;
+    const completedTodos = todosList.filter((todo) => todo.isComplete).length;
+    return (completedTodos / todosList.length) * 100;
+  }
+
+  async function addTodo(ev) {
+    ev.preventDefault();
+    const newTodo = {
+      id: makeId(6),
+      title: todoInputTitleRef.current.value,
+      isComplete: false,
     };
-    
+    await addTodoToDatabase(newTodo);
+    const newTodoList = [...todosList, newTodo];
+    setTodosList(newTodoList);
+    todoInputTitleRef.current.value = "";
+  }
 
-  function addTodo(ev) {
-      ev.preventDefault();
-      const newTodo = {
-        id : makeId(6),
-        title : newTodoName,
-        isComplete : false
+  async function addTodoToDatabase(todo) {
+    axios
+      .post(TodosURL, todo)
+      .then(function (response) {
+        console.log("Todo added:", response.data);
+      })
+      .catch(function (error) {
+        console.error("Error adding todo:", error);
+      });
+  }
+
+  async function removeTodo(todoId) {
+    await removeTodoFromDatabase(todoId);
+    const newTodoList = todosList.filter((todo) => {
+      return todo.id !== todoId ? todo : null;
+    });
+    setTodosList(newTodoList);
+  }
+
+  async function removeTodoFromDatabase(todoId) {
+    axios
+      .delete(`${TodosURL}/${todoId}`)
+      .then(function (response) {
+        console.log("Todo removed:", response.data);
+      })
+      .catch(function (error) {
+        console.error("Error adding todo:", error);
+      });
+  }
+
+  function totalCompletedTodos() {
+    const res = todosList.filter((todo) => {
+      if (todo.isComplete) {
+        return todo;
       }
-      const newTodoList = [...todosList, newTodo];
-      setTodosList(newTodoList)
-      setNewTodoName("")
-  
-    }  
+    });
+    return res.length;
+  }
 
-    function removeTodo(todoId) {
-      const newTodoList = todosList.filter((todo) => {
-        return todo.id !== todoId ? todo : null
-      })
-      setTodosList(newTodoList)
-
-    }
-
-    function totalCompletedTodos() {
-      const res = todosList.filter((todo) => {
-        if (todo.isComplete) {
-          return todo
-        }
-      })
-      return res.length
-    }
-
-    function totalActiveTodos() {
-      const res = todosList.filter((todo) => {
-        if (!todo.isComplete) {
-          return todo
-        }
-      })
-      return res.length
-    }
-    
+  function totalActiveTodos() {
+    const res = todosList.filter((todo) => {
+      if (!todo.isComplete) {
+        return todo;
+      }
+    });
+    return res.length;
+  }
 
   function checkboxChange(todoId) {
     const newTodosList = todosList.map((todo) => {
       if (todo.id === todoId) {
-        return {...todo, isComplete : todo.isComplete === false ? true : false }
+        const updatedTodo = {
+          ...todo,
+          isComplete: todo.isComplete === false ? true : false,
+        };
+        updateCheckboxInDatabase(updatedTodo);
+        return updatedTodo;
       }
-      return todo
-    })
-    setTodosList(newTodosList)
+      return todo;
+    });
+    setTodosList(newTodosList);
+  }
+
+  async function updateCheckboxInDatabase(todo) {
+    axios
+      .put(`${TodosURL}/${todo.id}`, todo)
+      .then((response) => {
+        console.log("Todo updated:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating todo:", error);
+      });
   }
 
   return (
     <>
-  <div className="todo_container">
-    <h1 className="todo_header">Todo's List</h1>
-    <form className="todo_form" onSubmit={addTodo}>
-      <h2 className="todo_subheader">Add new todo</h2>
-      <div className="todo_input_container">
-        <label className="todo_label" htmlFor="todoName">Todo title :</label>
-        <input className="todo_input" value={newTodoName} onChange={(ev) => {setNewTodoName(ev.target.value)}} id="todoName" type="text"/>
-      </div>
-      <button className="todo_button">Add Todo</button>
-    </form>
-    <p>todos progress : {calculateProgress().toFixed(2)}%</p>
-    <div className="progress_container">
-      <div className="progress_bar" style={{ width: `${calculateProgress()}%` }}></div>
-    </div>
-    {todosList.length === 0 ? <p className="todo_message">No todos available</p> : null}
-    <ul className="todo_list">
-      {todosList.map((todo) => {
-        return (
-          <li className="todo_item" key={todo.id}>
-            <div className="todo_title_and_state">
-              <p className="todo_title">Title : {todo.title}</p>
-              <span className="todo_state">
-                State: <input className="todo_checkbox" onChange={() => { checkboxChange(todo.id) }} type="checkbox" checked={todo.isComplete}/>
-              </span>
-            </div>
-            <div className="todo_actions">
-              <button className="todo_remove_button" onClick={() => { removeTodo(todo.id)}}>Remove todo</button>
-            </div>
-          </li>
-        )
-      })}
-    </ul>
-      <div className="todos_information_wrapper">
-        <p>Total todos : {todosList.length}</p>
-        <p>Completed todos : {totalCompletedTodos()}</p>
-        <p>Active todos : {totalActiveTodos()}</p>
-      </div>
-  </div>
-</>
+      <div className="todo-container">
+        <h1 className="todo-header">Todo's List</h1>
+        <div>
+          <label htmlFor="seacrh">Search Todo : </label>
+          <input
+            // ref={searchInputRef}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
+            type="text"
+            name="search"
+            id="seacrh"
+          />
+        </div>
+        <AddTodoForm todoInputTitleRef={todoInputTitleRef} addTodo={addTodo} />
+        <ProgressBar calculateProgress={calculateProgress} />
 
-  )
+        <TodoList
+          query={query}
+          todosList={todosList}
+          checkboxChange={checkboxChange}
+          removeTodo={removeTodo}
+        />
+        <TodosStatistic
+          totalCompletedTodos={totalCompletedTodos}
+          totalActiveTodos={totalActiveTodos}
+          todosList={todosList}
+        />
+      </div>
+    </>
+  );
 }
 
-export default App
+export default App;
