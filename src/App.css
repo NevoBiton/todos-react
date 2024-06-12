@@ -9,7 +9,7 @@ body {
   align-items: center;
 }
 
-.todo_container {
+.todo-container {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
@@ -18,22 +18,22 @@ body {
   margin: 20px;
 }
 
-.todo_header {
+.todo-header {
   text-align: center;
   color: #333;
 
   
 }
 
-.todo_subheader {
+.todo-subheader {
   color: #333;
 }
 
-.todo_form {
+.todo-form {
   margin-bottom: 20px;
 }
 
-.todo_input_container {
+.todo-input-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -41,12 +41,12 @@ body {
   margin-bottom: 10px;
 }
 
-.todo_label {
+.todo-label {
   margin-bottom: 5px;
   color: #555;
 }
 
-.todo_input {
+.todo-input {
   width: 40vw;
   padding: 8px;
   border: 1px solid #ddd;
@@ -54,7 +54,7 @@ body {
   font-size: 16px;
 }
 
-.todo_button {
+.todo-button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -64,21 +64,21 @@ body {
   cursor: pointer;
 }
 
-.todo_button:hover {
+.todo-button:hover {
   background-color: #0056b3;
 }
 
-.todo_message {
+.todo-message {
   color: #666;
   text-align: center;
 }
 
-.todo_list {
+.todo-list {
   list-style-type: none;
   padding: 0;
 }
 
-.todo_item {
+.todo-item {
   background-color: #f9f9f9;
   margin-bottom: 10px;
   padding: 15px;
@@ -89,22 +89,22 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.todo_title {
+.todo-title {
   margin: 0;
   font-size: 16px;
 }
 
- .todo_title_and_state {
+ .todo-title-and-state {
   min-width: 40vw;
   display: flex;
   justify-content: space-between;
  }
 
-.todo_checkbox {
+.todo-checkbox {
   transform: scale(1.2);
 }
 
-.todo_remove_button {
+.todo-remove-button {
   background-color: #dc3545;
   padding: 10px 20px;
   border: none;
@@ -114,16 +114,16 @@ body {
   cursor: pointer;
 }
 
-.todo_remove_button:hover {
+.todo-remove-button:hover {
   background-color: #c82333;
 }
 
-.todos_information_wrapper {
+.todos-information-wrapper {
   display: flex;
   justify-content: space-around;
 }
 
-.progress_container {
+.progress-container {
   background-color: #e0e0e0;
   border-radius: 10px;
   overflow: hidden;
@@ -131,7 +131,7 @@ body {
   height: 20px;
 }
 
-.progress_bar {
+.progress-bar {
   background-color: #007BFF;
   height: 100%;
   transition: width 0.3s ease;
