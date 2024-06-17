@@ -1,44 +1,34 @@
 {
   "todos": [
     {
-      "id": "4",
-      "title": "Write Unit Tests",
-      "isComplete": true
+      "id": "sZ5aCY",
+      "title": "Clear the room",
+      "isComplete": false,
+      "date": "2024-06-14T16:06:06.454Z"
     },
     {
-      "id": "5",
-      "title": "Implement Context",
-      "isComplete": true
+      "id": "JpNweI",
+      "title": "Clear",
+      "isComplete": true,
+      "date": "2024-06-16T08:43:35.339Z"
     },
     {
-      "id": "6",
-      "title": "Create Portfolio Website",
-      "isComplete": true
+      "id": "eoKbIJ",
+      "title": "Clear",
+      "isComplete": false,
+      "date": "2024-06-16T08:43:40.049Z"
     },
     {
-      "id": "7",
-      "title": "Learn TypeScript",
-      "isComplete": false
+      "id": "RIoWBm",
+      "title": "Car",
+      "isComplete": false,
+      "date": "Sun Jun 16 2024 12:12:13 GMT+0300 (Israel Daylight Time)"
     },
     {
-      "id": "8",
-      "title": "Refactor Codebase",
-      "isComplete": false
-    },
-    {
-      "id": "9",
-      "title": "Optimize Performance",
-      "isComplete": true
-    },
-    {
-      "id": "10",
-      "title": "Deploy to Production",
-      "isComplete": true
-    },
-    {
-      "id": "ZHJoEb",
-      "title": "nevo",
-      "isComplete": true
+      "id": "fzJjks",
+      "title": "Nevo",
+      "isComplete": false,
+      "date": "Sun Jun 16 2024 14:13:34 GMT+0300 (Israel Daylight Time)"
     }
   ]
 }

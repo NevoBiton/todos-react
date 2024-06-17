@@ -3,7 +3,7 @@ import React from "react";
 function ProgressBar(props) {
   return (
     <>
-      <p>todos progress : {props.calculateProgress().toFixed(2)}%</p>
+      <p>Total todos progress : {props.calculateProgress().toFixed(2)}%</p>
       <div className="progress-container">
         <div
           className="progress-bar"
